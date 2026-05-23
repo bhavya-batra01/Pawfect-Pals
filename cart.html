@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart | Pawfect Pals</title>
+<link rel="stylesheet" href="home.css">
+
+<style>
+main{
+    display:flex;
+    justify-content:space-between;
+    gap:40px;
+    padding:40px;
+}
+.cart-container{
+    width:65%;
+}
+.cart-item{
+    display:flex;
+    gap:20px;
+    background:#fff3e6;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+    align-items:center;
+}
+.cart-item img{
+    width:80px;
+    border-radius:10px;
+}
+.cart-actions button{
+    margin-top:6px;
+    display:block;
+    padding:6px 12px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+.qty-btn{ background:#7c5edc; color:white; }
+.remove-btn{ background:#e74c3c; color:white; }
+.buy-btn{
+    background:#27ae60;
+    color:white;
+}
+.buy-btn.active{
+    background:#2ecc71;
+}
+.checkout-box{
+    width:30%;
+    background:#fff3e6;
+    padding:25px;
+    border-radius:15px;
+    height:fit-content;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="name">
+        <div class="logo">
+            <img src="logo.png" alt="Pawfect Pals logo">
+            <h1>Pawfect Pals</h1>
+        </div>
+
+    <nav class="nav">
+        <ul>
+            <li class="active"><a href="home.html">HOME</a></li>
+            <li><a href="categories.html">CATEGORIES</a></li>
+            <li><a href="company.html">CONTACT</a></li>
+        </ul>
+    </nav>
+        <ul class="icons">
+            <li><a href="categories.html">🔍</a></li>
+            <li><a href="cart.html">🛒</a></li>
+            <li><a href="user.html">👤</a></li>
+        </ul>
+    </div>
+
+    <hr class="my-line">
+
+</header>
+
+<main>
+
+    <!-- LEFT : CART ITEMS -->
+    <div class="cart-container">
+        <h2>My Cart</h2>
+        <div id="cartItems"></div>
+    </div>
+
+    <!-- RIGHT : CHECKOUT SUMMARY -->
+    <div class="checkout-box">
+        <h3>Proceed to Checkout</h3>
+        <div id="checkoutSummary"></div>
+        <h2>Total: <span id="checkoutTotal">₹0</span></h2>
+        <button style="margin-top:10px;padding:10px 15px;border:none;border-radius:8px;background:#7c5edc;color:white;">
+            Order Now
+        </button>
+    </div>
+
+</main>
+
+<script>
+/* ================== USER-SPECIFIC CART ================== */
+const loggedUser = localStorage.getItem("loggedInUser") || "guest";
+const CART_KEY = `cart_${loggedUser}`;
+
+let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+
+// Ensure buyNow flag exists
+cart.forEach(item=>{
+    if(item.buyNow === undefined){
+        item.buyNow = false;
+    }
+});
+
+const cartItemsDiv = document.getElementById("cartItems");
+
+function saveCart(){
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+}
+
+function renderCart(){
+    cartItemsDiv.innerHTML = "";
+
+    if(cart.length === 0){
+        cartItemsDiv.innerHTML = "<p>Your cart is empty</p>";
+        renderCheckoutSummary();
+        return;
+    }
+
+    cart.forEach((item,index)=>{
+        const div = document.createElement("div");
+        div.className = "cart-item";
+
+        div.innerHTML = `
+            <img src="${item.image}">
+            <div>
+                <h3>${item.name}</h3>
+                <p>Price: ₹${item.price}</p>
+                <p>Quantity: ${item.quantity}</p>
+            </div>
+            <div class="cart-actions">
+                <button class="qty-btn">+1</button>
+                <button class="remove-btn">Remove</button>
+                <button class="buy-btn ${item.buyNow ? "active":""}">
+                    ${item.buyNow ? "Added to Checkout" : "Buy Now"}
+                </button>
+            </div>
+        `;
+
+        div.querySelector(".qty-btn").onclick = ()=>{
+            item.quantity++;
+            saveCart();
+            renderCart();
+        };
+
+        div.querySelector(".remove-btn").onclick = ()=>{
+            cart.splice(index,1);
+            saveCart();
+            renderCart();
+        };
+
+        div.querySelector(".buy-btn").onclick = ()=>{
+            item.buyNow = !item.buyNow;
+            saveCart();
+            renderCart();
+        };
+
+        cartItemsDiv.appendChild(div);
+    });
+
+    renderCheckoutSummary();
+}
+
+function renderCheckoutSummary(){
+    const checkoutItems = cart.filter(item=>item.buyNow);
+    const summaryDiv = document.getElementById("checkoutSummary");
+    const totalSpan = document.getElementById("checkoutTotal");
+
+    summaryDiv.innerHTML = "";
+    let total = 0;
+
+    if(checkoutItems.length === 0){
+        summaryDiv.innerHTML = "<p>No items selected</p>";
+        totalSpan.innerText = "₹0";
+        return;
+    }
+
+    checkoutItems.forEach(item=>{
+        const sub = item.price * item.quantity;
+        total += sub;
+        summaryDiv.innerHTML += `<p>${item.name} × ${item.quantity} — ₹${sub}</p>`;
+    });
+
+    totalSpan.innerText = `₹${total}`;
+}
+
+renderCart();
+</script>
+
+<footer>
+    <ul class="company">
+        <li><h3>Company</h3></li>
+        <li>About Us</li>
+        <li>FAQ</li>
+        <li>Contact</li>
+    </ul>
+
+    <ul class="legal">
+        <li><h3>Legal</h3></li>
+        <li>Privacy Policy</li>
+        <li>Terms & Conditions</li>
+        <li>Cookie Policy</li>
+    </ul>
+
+    <ul class="help">
+        <li><h3>Help</h3></li>
+        <li>Shipping & Delivery</li>
+        <li>Returns Policy</li>
+        <li>Security & Payment</li>
+    </ul>
+
+    <ul class="social">
+        <li><h3>Social</h3></li>
+        <li>Instagram</li>
+        <li>Twitter</li>
+    </ul>
+
+    <!-- User Status Button -->
+    <div style="margin-top:20px;">
+        <button id="userStatusBtn" style="
+            padding:10px 20px;
+            border:none;
+            border-radius:8px;
+            background:#7c5edc;
+            color:white;
+            cursor:pointer;
+            font-size:16px;
+        "></button>
+    </div>
+</footer>
+
+<script>
+// Show logged-in user or guest
+const userStatusBtn = document.getElementById("userStatusBtn");
+userStatusBtn.innerText = loggedUser === "guest" ? "Guest" : `Logged in as: ${loggedUser}`;
+
+// Click to go to user page or login
+userStatusBtn.onclick = ()=>{
+    if(loggedUser === "guest"){
+        window.location.href = "login.html";
+    } else {
+        window.location.href = "user.html";
+    }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pawfect Pals || Home</title>
+    <link rel="stylesheet" href="home.css">
+</head>
+
+<body>
+
+<header>
+    <div class="name">
+        <div class="logo">
+            <img src="logo.png" alt="Pawfect Pals logo">
+            <h1>Pawfect Pals</h1>
+        </div>
+
+        <nav class="nav">
+            <ul>
+                <li class="active"><a href="home.html">HOME</a></li>
+                <li><a href="categories.html">CATEGORIES</a></li>
+                <li><a href="company.html">CONTACT</a></li>
+            </ul>
+        </nav>
+
+        <ul class="icons" id="userIcons">
+            <li><a href="categories.html">🔍</a></li>
+            <li><a href="cart.html">🛒</a></li>
+            <li><a href="user.html">👤</a></li>
+        </ul>
+    </div>
+
+    <hr class="my-line">
+</header>
+
+<main>
+    <div class="content">
+        <h1>
+            The best place to buy top quality<br>
+            products for your pets
+        </h1>
+        <h2>Shop by pet, brand or products on sale</h2>
+        <a href="categories.html">
+            <button>Shop Now</button>
+        </a>
+    </div>
+
+    <img src="pets.png" alt="Happy pets illustration">
+</main>
+
+<footer>
+    <ul class="company">
+        <li><h3>Company</h3></li>
+        <li>About Us</li>
+        <li>FAQ</li>
+        <li>Contact</li>
+    </ul>
+
+    <ul class="legal">
+        <li><h3>Legal</h3></li>
+        <li>Privacy Policy</li>
+        <li>Terms & Conditions</li>
+        <li>Cookie Policy</li>
+    </ul>
+
+    <ul class="help">
+        <li><h3>Help</h3></li>
+        <li>Shipping & Delivery</li>
+        <li>Returns Policy</li>
+        <li>Security & Payment</li>
+    </ul>
+
+    <ul class="social">
+        <li><h3>Social</h3></li>
+        <li>Instagram</li>
+        <li>Twitter</li>
+    </ul>
+    <!-- User Display Button -->
+<div style="margin-top:20px;">
+    <button id="userStatusBtn" style="
+        padding:10px 20px;
+        border:none;
+        border-radius:8px;
+        background:#7c5edc;
+        color:white;
+        cursor:pointer;
+        font-size:16px;
+    "></button>
+</div>
+
+</footer>
+
+<script>
+/* ================= AUTH LOGIC ================= */
+
+const user = localStorage.getItem("loggedInUser");
+const icons = document.getElementById("userIcons");
+
+/* If user is NOT logged in → show login icon */
+if (!user) {
+    icons.innerHTML += `
+        <li>
+            <a href="login.html" title="Login">🔐 </a>
+        </li>
+    `;
+}
+
+/* If user IS logged in → show logout icon */
+if (user) {
+    icons.innerHTML += `
+        <li>
+            <a href="#" onclick="logout()" title="Logout">🚪</a>
+        </li>
+    `;
+}
+
+function logout() {
+    localStorage.removeItem("loggedInUser");
+    alert("Logged out successfully");
+    window.location.href = "home.html";
+}
+// User status button
+const userStatusBtn = document.getElementById("userStatusBtn");
+
+// Get logged-in user
+const currentUser = localStorage.getItem("loggedInUser");
+
+if(currentUser){
+    userStatusBtn.innerText = `Logged in as: ${currentUser}`;
+} else {
+    userStatusBtn.innerText = "Guest";
+}
+
+</script>
+
+</body>
+</html>

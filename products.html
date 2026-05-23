@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product | Pawfect Pals</title>
+    <link rel="stylesheet" href="second.css">
+</head>
+<body>
+
+<header>
+    <div class="name">
+        <div class="logo">
+            <img src="logo.png" alt="Pawfect Pals logo">
+            <h1>Pawfect Pals</h1>
+        </div>
+
+    <nav class="nav">
+        <ul>
+            <li class="active"><a href="home.html">HOME</a></li>
+            <li><a href="categories.html">CATEGORIES</a></li>
+            <li><a href="company.html">CONTACT</a></li>
+        </ul>
+    </nav>
+        <ul class="icons">
+            <li><a href="categories.html">🔍</a></li>
+            <li><a href="cart.html">🛒</a></li>
+            <li><a href="user.html">👤</a></li>
+        </ul>
+    </div>
+
+    <hr class="my-line">
+
+</header>
+
+<main class="add-product">
+    <h1>Add New Product</h1>
+
+    <form id="productForm" class="product-form">
+        <label>Product Name</label>
+        <input type="text" id="name" placeholder="Enter product name" required>
+
+        <label>Category</label>
+        <select id="category" required>
+            <option value="">Select category</option>
+            <option>Dogs</option>
+            <option>Cats</option>
+            <option>Fish</option>
+            <option>Small Pets</option>
+            <option>Reptiles</option>
+            <option>Toys</option>
+            <option>Sale</option>
+        </select>
+
+        <label>Price (₹)</label>
+        <input type="number" id="price" placeholder="Enter price" required>
+
+        <label>Stock Quantity</label>
+        <input type="number" id="stock" placeholder="Enter quantity" required>
+
+        <label>Product Image</label>
+        <input type="file" id="image" accept="image/*">
+
+        <label>Description</label>
+        <textarea id="description" rows="4" placeholder="Write product description"></textarea>
+
+        <button type="submit">Add Product</button>
+    </form>
+
+    <h2 style="text-align:center; margin-top: 40px;">Added Products</h2>
+    <div id="productList" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content:center;"></div>
+</main>
+
+<footer>
+    <ul class="company">
+        <li><h3>Company</h3></li>
+        <li>About Us</li>
+        <li>FAQ</li>
+        <li>Contact</li>
+    </ul>
+
+    <ul class="legal">
+        <li><h3>Legal</h3></li>
+        <li>Privacy Policy</li>
+        <li>Terms & Conditions</li>
+        <li>Cookie Policy</li>
+    </ul>
+
+    <ul class="help">
+        <li><h3>Help</h3></li>
+        <li>Shipping & Delivery</li>
+        <li>Returns Policy</li>
+        <li>Security & Payment</li>
+    </ul>
+
+    <ul class="social">
+        <li><h3>Social</h3></li>
+        <li>Instagram</li>
+        <li>Twitter</li>
+    </ul>
+</footer>
+<script>
+    const form = document.getElementById('productForm');
+    const productList = document.getElementById('productList');
+
+    // Load existing products from localStorage
+    let products = JSON.parse(localStorage.getItem('products')) || [];
+
+    function displayProducts() {
+        productList.innerHTML = '';
+        products.forEach((product, index) => {
+            const card = document.createElement('div');
+            card.style.width = '200px';
+            card.style.border = '1px solid #ccc';
+            card.style.borderRadius = '12px';
+            card.style.padding = '10px';
+            card.style.background = '#fff0e1';
+            card.style.textAlign = 'center';
+
+            card.innerHTML = `
+                <img src="${product.image}" alt="${product.name}" style="width:100%; height:120px; object-fit:cover; border-radius:8px;">
+                <h3>${product.name}</h3>
+                <p><strong>Category:</strong> ${product.category}</p>
+                <p><strong>Price:</strong> ₹${product.price}</p>
+                <p><strong>Stock:</strong> ${product.stock}</p>
+                <p style="font-size:14px;">${product.description}</p>
+                <button onclick="deleteProduct(${index})" style="background:#ff4d4d; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">Delete</button>
+            `;
+            productList.appendChild(card);
+        });
+    }
+
+    function deleteProduct(index) {
+        products.splice(index, 1);
+        localStorage.setItem('products', JSON.stringify(products));
+        displayProducts();
+    }
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('name').value;
+        const category = document.getElementById('category').value;
+        const price = document.getElementById('price').value;
+        const stock = document.getElementById('stock').value;
+        const description = document.getElementById('description').value;
+        const imageFile = document.getElementById('image').files[0];
+
+        if(imageFile){
+            const reader = new FileReader();
+            reader.onload = function() {
+                const image = reader.result;
+                addProduct(name, category, price, stock, description, image);
+            }
+            reader.readAsDataURL(imageFile);
+        } else {
+            addProduct(name, category, price, stock, description, '');
+        }
+
+        form.reset();
+    });
+
+    function addProduct(name, category, price, stock, description, image) {
+        const product = {name, category, price, stock, description, image};
+        products.push(product);
+        localStorage.setItem('products', JSON.stringify(products));
+        displayProducts();
+    }
+
+    // Initial render
+    displayProducts();
+</script>
+
+</body>
+</html>

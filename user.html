@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Dashboard | Pawfect Pals</title>
+<link rel="stylesheet" href="home.css">
+<style>
+    body {
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-image: url('background.png');
+        color: #333;
+    }
+
+    /* ===== HEADER ===== */
+    .name { display:flex; justify-content:space-between; align-items:center; padding:20px 80px; }
+    .logo { display:flex; align-items:center; gap:20px; }
+    .logo img { width:100px; }
+    .logo h1 { font-size:55px; font-weight:bold; color:#000958; }
+    .icons { display:flex; gap:40px; list-style:none; }
+    .icons li a { font-size:35px; text-decoration:none; transition: transform 0.2s ease; }
+    .icons li a:hover { transform: scale(1.2); }
+    .my-line { border:none; height:2px; background-color:#141b5e; }
+    .nav ul { display:flex; gap:40px; list-style:none; padding:20px 90px; font-size:25px; font-weight:bold; }
+    .nav a { text-decoration:none; color:#000958; }
+    .nav a:hover { text-decoration:underline; }
+
+    .dashboard { max-width:1100px; margin:auto; display:flex; flex-direction:column; gap:30px; }
+
+    form { background:#fff; padding:25px; border-radius:16px; box-shadow:0 10px 25px rgba(0,0,0,0.08); }
+    h2 { margin-bottom:20px; color:#6b3e2e; }
+    label { display:block; margin-top:12px; font-weight:500; }
+    input, select, textarea { width:100%; padding:10px 12px; border-radius:10px; border:1px solid #ddd; margin-top:5px; }
+    textarea { resize:none; min-height:80px; }
+    input:focus, select:focus, textarea:focus { outline:none; border-color:#ff9f68; }
+    button { margin-top:15px; padding:12px; border:none; border-radius:12px; background:linear-gradient(135deg,#ff9f68,#ff7a59); color:white; font-size:15px; cursor:pointer; }
+    button:hover { opacity:0.9; }
+    .add-pet-btn { width:100%; background:#6bc4a1; margin-top:25px; }
+
+    .pets-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; }
+    .pet-card { background:#fff7ee; padding:18px; border-radius:14px; border:1px dashed #ffb784; position:relative; }
+    .pet-card h3 { margin-bottom:10px; color:#6b3e2e; }
+    .remove-btn { position:absolute; top:12px; right:12px; background:#ff6b6b; padding:6px 10px; border-radius:50%; font-size:12px; }
+
+    footer { display:flex; gap:80px; padding:40px 80px; background-color:#fce7ca; }
+    footer ul { list-style:none; }
+    footer h3 { margin-bottom:15px; }
+    footer li { margin-bottom:10px; cursor:pointer; }
+    footer li:hover { text-decoration:underline; }
+
+    @media(max-width:600px){
+        header h1 { font-size:20px; }
+        nav a { margin-left:10px; font-size:14px; }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="name">
+        <div class="logo">
+            <img src="logo.png" alt="Pawfect Pals logo">
+            <h1>Pawfect Pals</h1>
+        </div>
+
+        <nav class="nav">
+            <ul>
+                <li class="active"><a href="home.html">HOME</a></li>
+                <li><a href="categories.html">CATEGORIES</a></li>
+                <li><a href="company.html">CONTACT</a></li>
+            </ul>
+        </nav>
+
+        <ul class="icons">
+            <li><a href="categories.html">🔍</a></li>
+            <li><a href="cart.html">🛒</a></li>
+            <li><a href="user.html">👤</a></li>
+            <li><a href="#" onclick="logout()">🚪</a></li>
+        </ul>
+    </div>
+
+    <hr class="my-line">
+</header>
+
+<div class="dashboard">
+
+    <!-- USER PROFILE -->
+    <form class="user-form">
+        <h2>👤 User Profile</h2>
+
+        <label>Full Name</label>
+        <input type="text" class="user-name">
+
+        <label>Email</label>
+        <input type="email" class="user-email">
+
+        <label>Phone</label>
+        <input type="tel" class="user-phone" placeholder="+91 XXXXX XXXXX">
+
+        <label>Address</label>
+        <textarea class="user-address"></textarea>
+
+        <button type="button" class="save-user-btn">Save Profile</button>
+    </form>
+
+    <!-- PETS SECTION -->
+    <form class="pets-form">
+        <h2>🐾 Your Pets</h2>
+
+        <div class="pets-grid">
+            <!-- Existing pet cards will be loaded dynamically -->
+        </div>
+
+        <button type="button" class="add-pet-btn">➕ Add New Pet</button>
+    </form>
+
+</div>
+
+<footer>
+    <ul class="company">
+        <li><h3>Company</h3></li>
+        <li>About Us</li>
+        <li>FAQ</li>
+        <li>Contact</li>
+    </ul>
+
+    <ul class="legal">
+        <li><h3>Legal</h3></li>
+        <li>Privacy Policy</li>
+        <li>Terms & Conditions</li>
+        <li>Cookie Policy</li>
+    </ul>
+
+    <ul class="help">
+        <li><h3>Help</h3></li>
+        <li>Shipping & Delivery</li>
+        <li>Returns Policy</li>
+        <li>Security & Payment</li>
+    </ul>
+
+    <ul class="social">
+        <li><h3>Social</h3></li>
+        <li>Instagram</li>
+        <li>Twitter</li>
+    </ul>
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+
+    /* ================= LOGIN CHECK ================= */
+    const user = localStorage.getItem("loggedInUser");
+    if(!user){
+        alert("Please login first");
+        window.location.href = "login.html";
+        return;
+    }
+
+    /* ================= USER PROFILE ================= */
+    const saveUserBtn = document.querySelector(".save-user-btn");
+    let userLocked = false;
+
+    const userNameInput = document.querySelector(".user-name");
+    const userEmailInput = document.querySelector(".user-email");
+    const userPhoneInput = document.querySelector(".user-phone");
+    const userAddressInput = document.querySelector(".user-address");
+
+    /* fill static user data */
+    userNameInput.value = "Bhavya";
+    userEmailInput.value = "bhavya@gmail.com";
+
+    saveUserBtn.addEventListener("click", ()=>{
+        const inputs = [userNameInput,userEmailInput,userPhoneInput,userAddressInput];
+        if(!userLocked){
+            inputs.forEach(i=>i.disabled = true);
+            saveUserBtn.innerText = "Edit Profile";
+            alert("Profile saved 👤");
+        } else {
+            inputs.forEach(i=>i.disabled = false);
+            saveUserBtn.innerText = "Save Profile";
+        }
+        userLocked = !userLocked;
+    });
+
+    /* ================= PET SECTION ================= */
+    const petsGrid = document.querySelector(".pets-grid");
+    const addPetBtn = document.querySelector(".add-pet-btn");
+
+    /* Load pets from localStorage per user */
+    const PET_KEY = `pets_${user}`;
+    let pets = JSON.parse(localStorage.getItem(PET_KEY)) || [];
+
+    function savePets(){
+        localStorage.setItem(PET_KEY, JSON.stringify(pets));
+    }
+
+    function renderPets(){
+        petsGrid.innerHTML = "";
+        pets.forEach((pet,index)=>{
+            const div = document.createElement("div");
+            div.className = "pet-card";
+
+            div.innerHTML = `
+                <button type="button" class="remove-btn">✖</button>
+                <h3>${pet.name || "Pet"}</h3>
+
+                <label>Pet Name</label>
+                <input type="text" class="pet-name" value="${pet.name || ""}">
+
+                <label>Pet Type</label>
+                <select class="pet-type">
+                    <option ${pet.type==="Dog"?"selected":""}>Dog</option>
+                    <option ${pet.type==="Cat"?"selected":""}>Cat</option>
+                    <option ${pet.type==="Fish"?"selected":""}>Fish</option>
+                </select>
+
+                <label>Breed</label>
+                <input type="text" class="pet-breed" value="${pet.breed || ""}">
+
+                <label>Age</label>
+                <input type="number" class="pet-age" value="${pet.age || ""}">
+
+                <label>Gender</label>
+                <select class="pet-gender">
+                    <option ${pet.gender==="Male"?"selected":""}>Male</option>
+                    <option ${pet.gender==="Female"?"selected":""}>Female</option>
+                </select>
+
+                <label>Medical Notes</label>
+                <textarea class="pet-notes">${pet.notes || ""}</textarea>
+
+                <button type="button" class="save-pet-btn">Save Pet</button>
+            `;
+
+            petsGrid.appendChild(div);
+        });
+    }
+
+    renderPets();
+
+    /* ADD PET */
+    addPetBtn.addEventListener("click", ()=>{
+        pets.push({}); // empty pet
+        savePets();
+        renderPets();
+    });
+
+    /* PET GRID EVENTS (SAVE / REMOVE) */
+    petsGrid.addEventListener("click",(e)=>{
+        const card = e.target.closest(".pet-card");
+        if(!card) return;
+        const index = Array.from(petsGrid.children).indexOf(card);
+
+        /* REMOVE PET */
+        if(e.target.classList.contains("remove-btn")){
+            pets.splice(index,1);
+            savePets();
+            renderPets();
+            return;
+        }
+
+        /* SAVE / EDIT PET */
+        if(e.target.classList.contains("save-pet-btn")){
+            const inputs = card.querySelectorAll("input, select, textarea");
+            const petData = {
+                name: card.querySelector(".pet-name").value,
+                type: card.querySelector(".pet-type").value,
+                breed: card.querySelector(".pet-breed").value,
+                age: card.querySelector(".pet-age").value,
+                gender: card.querySelector(".pet-gender").value,
+                notes: card.querySelector(".pet-notes").value
+            };
+
+            if(e.target.innerText === "Save Pet"){
+                inputs.forEach(i=>i.disabled = true);
+                card.querySelector("h3").innerText = petData.name || "Pet";
+                pets[index] = petData;
+                savePets();
+                e.target.innerText = "Edit Pet";
+                alert("Pet saved 🐾");
+            } else {
+                inputs.forEach(i=>i.disabled = false);
+                e.target.innerText = "Save Pet";
+            }
+        }
+    });
+
+});
+
+/* ================= LOGOUT ================= */
+function logout(){
+    localStorage.removeItem("loggedInUser");
+    alert("Logged out successfully");
+    window.location.href = "home.html";
+}
+</script>
+
+</body>
+</html>

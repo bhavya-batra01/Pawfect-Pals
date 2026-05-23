@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Categories | Pawfect Pals</title>
+<link rel="stylesheet" href="home.css">
+
+<style>
+/* LAYOUT */
+.main-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* LEFT SIDEBAR */
+.sidebar {
+    width: 260px;
+    background: #fff0e1;
+    padding: 20px;
+    border-right: 2px solid #f0d9c4;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.category-card {
+    background: white;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.category-card:hover {
+    background: #ff9f68;
+    color: white;
+}
+
+/* RIGHT CONTENT */
+.content {
+    flex: 1;
+    padding: 25px;
+}
+
+/* SEARCH */
+.search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+}
+
+.search-bar button {
+    padding: 12px 22px;
+    border-radius: 25px;
+    border: none;
+    background: #ff9f68;
+    color: white;
+    cursor: pointer;
+}
+
+/* PRODUCTS */
+.products-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.product-card {
+    background: white;
+    padding: 15px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.product-card img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.product-card button {
+    margin: 8px 5px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.add-cart {
+    background: #ff9f68;
+    color: white;
+}
+
+.view-btn {
+    background: #3f4f00;
+    color: white;
+}
+
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 25px;
+    width: 320px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.modal-content img {
+    width: 100%;
+    border-radius: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="name">
+        <div class="logo">
+            <img src="logo.png" alt="Pawfect Pals logo">
+            <h1>Pawfect Pals</h1>
+        </div>
+
+    <nav class="nav">
+        <ul>
+            <li><a href="home.html">HOME</a></li>
+            <li class="active"><a href="categories.html">CATEGORIES</a></li>
+            <li><a href="company.html">CONTACT</a></li>
+        </ul>
+    </nav>
+        <ul class="icons">
+            <li><a href="categories.html">🔍</a></li>
+            <li><a href="cart.html">🛒</a></li>
+            <li><a href="user.html">👤</a></li>
+        </ul>
+    </div>
+
+    <hr class="my-line">
+
+</header>
+
+<div class="main-layout">
+
+    <!-- LEFT CATEGORIES -->
+    <aside class="sidebar">
+        <h2>Categories</h2>
+        <div class="category-card" data-category="Dogs">🐶 Dogs</div>
+        <div class="category-card" data-category="Cats">🐱 Cats</div>
+        <div class="category-card" data-category="Fish">🐟 Fish</div>
+        <div class="category-card" data-category="Small Pets">🐹 Small Pets</div>
+        <div class="category-card" data-category="Reptiles">🦎 Reptiles</div>
+        <div class="category-card" data-category="Toys">🧸 Toys</div>
+        <div class="category-card" data-category="Sale">🔥 Sale</div>
+    </aside>
+
+    <!-- RIGHT CONTENT -->
+    <section class="content">
+
+        <!-- SEARCH -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search by product or category">
+            <button id="searchBtn">Search</button>
+        </div>
+
+        <!-- PRODUCTS -->
+        <div id="productsContainer" class="products-container"></div>
+
+    </section>
+
+</div>
+
+<!-- PRODUCT MODAL -->
+<div id="productModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-top" style="display: flex; gap: 15px; align-items: flex-start;">
+            <img id="modalImg" style="width: 180px; height: 150px; object-fit: cover; border-radius: 15px;">
+            <div style="text-align: left;">
+                <h3 id="modalName" style="margin: 0 0 10px 0;font-size:30px;font-weight:bolder"></h3>
+                <p id="modalDescription" style="margin: 0; color: #555; font-size:larger;font-weight:bolder"></p>
+            </div>
+        </div>
+        <div style="margin-top: 15px; text-align: left; font-size:larger;font-weight:bolder">
+            <p id="modalCategory"></p>
+            <p id="modalPrice"></p>
+            <p id="modalStock"></p>
+        </div>
+        <button onclick="closeModal()" style="margin-top: 15px; color:white; background-color:orange ; font-size:larger; font-weight:bolder;padding:10px; border:none;border-radius:5px;">Close</button>
+    </div>
+</div>
+
+<script>
+/* ---------- LOAD DATA ---------- */
+const products = JSON.parse(localStorage.getItem("products")) || [];
+const loggedUser = localStorage.getItem("loggedInUser") || "guest";
+const CART_KEY = `cart_${loggedUser}`;
+
+const productsContainer = document.getElementById("productsContainer");
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
+const categoryCards = document.querySelectorAll(".category-card");
+
+/* ---------- DISPLAY PRODUCTS ---------- */
+function displayProducts(list) {
+    productsContainer.innerHTML = "";
+
+    if (list.length === 0) {
+        productsContainer.innerHTML =
+            "<p style='grid-column:1/-1;text-align:center;'>No products found</p>";
+        return;
+    }
+
+    list.forEach(product => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+
+        card.innerHTML = `
+            <img src="${product.image}">
+            <h3>${product.name}</h3>
+            <p>₹${product.price}</p>
+            <button class="view-btn">View</button>
+            <button class="add-cart">Add to Cart</button>
+        `;
+
+        card.querySelector(".add-cart").onclick = () => addToCart(product);
+        card.querySelector(".view-btn").onclick = () => viewProduct(product);
+
+        productsContainer.appendChild(card);
+    });
+}
+
+/* ---------- SEARCH ---------- */
+function handleSearch() {
+    const q = searchInput.value.toLowerCase().trim();
+    if (!q) {
+        displayProducts(products);
+        return;
+    }
+    const filtered = products.filter(p =>
+        p.name.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q)
+    );
+    displayProducts(filtered);
+}
+
+searchBtn.onclick = handleSearch;
+searchInput.onkeyup = e => e.key === "Enter" && handleSearch();
+searchInput.oninput = handleSearch;
+
+/* ---------- CATEGORY FILTER ---------- */
+categoryCards.forEach(card => {
+    card.onclick = () => {
+        const cat = card.dataset.category;
+        const filtered = products.filter(p => p.category === cat);
+        displayProducts(filtered);
+        searchInput.value = "";
+    };
+});
+
+/* ---------- CART ---------- */
+function addToCart(product) {
+    let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+
+    const index = cart.findIndex(item => item.name === product.name);
+
+    if (index !== -1) {
+        cart[index].quantity += 1;
+    } else {
+        cart.push({
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            category: product.category,
+            quantity: 1,
+            buyNow: false
+        });
+    }
+
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    alert(product.name + " added to cart!");
+}
+
+/* ---------- VIEW PRODUCT ---------- */
+function viewProduct(p) {
+    modalImg.src = p.image;
+    modalName.innerText = p.name;
+    modalDescription.innerText = p.description || "No description available.";
+    modalCategory.innerText = "Category: " + p.category;
+    modalPrice.innerText = "Price: ₹" + p.price;
+    modalStock.innerText = "Stock: " + p.stock;
+    productModal.style.display = "flex";
+}
+
+function closeModal() {
+    productModal.style.display = "none";
+}
+
+/* ---------- INITIAL DISPLAY ---------- */
+displayProducts(products);
+</script>
+
+</body>
+</html>

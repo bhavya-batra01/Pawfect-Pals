@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Company | Pawfect Pals</title>
+<link rel="stylesheet" href="home.css">
+<style>
+    body {
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-image: url('background.png');
+        color: #000958;
+    }
+
+    main {
+        display: flex;
+        max-width: 1000px;
+        margin: 30px auto;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    main nav {
+        flex: 1 1 200px;
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        height: fit-content;
+    }
+    main nav h2 {
+        margin-bottom: 15px;
+    }
+    main nav ul {
+        list-style: none;
+        padding: 0;
+    }
+    main nav ul li {
+        margin: 10px 0;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 6px;
+        transition: background 0.2s;
+    }
+    main nav ul li:hover {
+        background: #3522a4;
+        color:white;
+    }
+    main nav ul li.active {
+        background: #351ebb;
+        color: white;
+    }
+    .content {
+        flex: 3 1 600px;
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        min-height: 300px;
+        text-align: center;
+        margin-top:10px;
+    }
+    .content img {
+        width: 80px;
+        display: block;
+        margin-bottom: 15px;
+    }
+    .content h3 {
+        margin-top: 0;
+    }
+
+        .info-list {
+    list-style: none;
+    padding: 0;
+}
+
+.info-list li {
+    margin-bottom: 14px;
+    line-height: 1.6;
+    color: #391c8b;
+}
+
+.info-list strong {
+    color: #260d6c;
+}
+
+.info-list a {
+    color: #260d6c;
+    text-decoration: none;
+}
+
+.info-list a:hover {
+    text-decoration: underline;
+}
+
+.social-box {
+    text-align: center;
+}
+
+.social-logo {
+    width: 60px;
+    margin-bottom: 10px;
+}
+
+    
+</style>
+</head>
+<body>
+
+<header>
+    <div class="name">
+        <div class="logo">
+            <img src="logo.png" alt="Pawfect Pals logo">
+            <h1>Pawfect Pals</h1>
+        </div>
+
+    <nav class="nav">
+        <ul>
+            <li class="active"><a href="home.html">HOME</a></li>
+            <li><a href="categories.html">CATEGORIES</a></li>
+            <li><a href="company.html">CONTACT</a></li>
+        </ul>
+    </nav>
+        <ul class="icons">
+            <li><a href="categories.html">🔍</a></li>
+            <li><a href="cart.html">🛒</a></li>
+            <li><a href="user.html">👤</a></li>
+        </ul>
+    </div>
+
+    <hr class="my-line">
+
+</header>
+<main>
+    <nav>
+        <h2>Company Info</h2>
+        <ul id="navList">
+            <li data-key="company">Company</li>
+            <li data-key="legal">Legal</li>
+            <li data-key="help">Help</li>
+            <li data-key="social">Social</li>
+        </ul>
+    </nav>
+
+    <div class="content" id="contentArea">
+        <h3>Welcome!</h3>
+        <p>Select a section from the left to see details.</p>
+    </div>
+</main>
+
+<script>
+    const contentArea = document.getElementById("contentArea");
+    const navItems = document.querySelectorAll("#navList li");
+
+    /* ---------- CONTENT DATA ---------- */
+    const details = {
+        company: `
+            <h3>🐾 Company</h3>
+            <ul class="info-list">
+                <li>
+                    <br>
+                    <strong>About Pawfect Pals</strong><br>
+                    Pawfect Pals is a pet-first brand committed to bringing you premium-quality products, accessories, and care essentials for pets of all kinds — because they deserve the best.
+                </li>
+
+                <li>
+                    <strong>Our Mission</strong><br>
+                    To make pet parenting joyful, affordable, and stress-free by offering trusted products and exceptional service.
+                </li>
+
+                <li>
+                    <strong>Why Choose Us?</strong><br>
+                    ✔ Vet-approved items<br>
+                    ✔ Ethical & cruelty-free products<br>
+                    ✔ Fast delivery across India<br>
+                    ✔ Loved by thousands of pet parents
+                </li>
+
+                <li>
+                    <strong>Customer Support</strong><br>
+                    We’re always here to help you and your furry companions 🐶🐱
+                </li>
+            </ul>
+        `,
+
+        legal: `
+            <h3>⚖️ Legal</h3> <br>
+            <ul class="info-list">
+                <li>
+                    <strong>Privacy Policy</strong><br>
+                    Your privacy matters to us. All personal information is securely stored and never shared with third parties.
+                </li>
+
+                <li>
+                    <strong>Terms & Conditions</strong><br>
+                    By using Pawfect Pals, you agree to our terms related to purchases, returns, and usage of our platform.
+                </li>
+
+                <li>
+                    <strong>Cookie Policy</strong><br>
+                    We use cookies to improve site performance, personalize content, and enhance your shopping experience.
+                </li>
+
+                <li>
+                    <strong>Compliance</strong><br>
+                    Pawfect Pals complies with applicable consumer protection and data safety laws.
+                </li>
+            </ul>
+        `,
+
+        help: `
+            <h3>❓ Help & Support</h3> <br>
+            <ul class="info-list">
+                <li>
+                    <strong>Shipping & Delivery</strong><br>
+                    Orders are processed within 24–48 hours and delivered safely to your doorstep.
+                </li>
+
+                <li>
+                    <strong>Returns & Refunds</strong><br>
+                    Hassle-free returns within 30 days for unused products in original packaging.
+                </li>
+
+                <li>
+                    <strong>Payments & Security</strong><br>
+                    All payments are protected using SSL encryption and trusted payment gateways.
+                </li>
+
+                <li>
+                    <strong>Need More Help?</strong><br>
+                    Visit our FAQ section or reach out to our support team anytime.
+                </li>
+            </ul>
+        `,
+
+        social: `
+            <h3>🌐 Social</h3> <br>
+            <div class="social-box">
+                <img src="logo.png" alt="Pawfect Pals Logo" class="social-logo">
+                <h2>Pawfect Pals</h2>
+                <p>Follow us for pet care tips, cute moments & exclusive offers 🐕🐈</p>
+
+                <ul class="info-list">
+                    <li>
+                        <strong>Instagram:</strong>
+                        <a href="#" target="_blank">@pawfectpals</a>
+                    </li>
+                    <li>
+                        <strong>Twitter (X):</strong>
+                        <a href="#" target="_blank">@pawfectpals</a>
+                    </li>
+                    <li>
+                        <strong>Email:</strong>
+                        <a href="mailto:support@pawfectpals.com">support@pawfectpals.com</a>
+                    </li>
+                </ul>
+            </div>
+        `
+    };
+
+    /* ---------- NAVIGATION HANDLER ---------- */
+    navItems.forEach(item => {
+        item.addEventListener("click", () => {
+
+            // remove active state from all
+            navItems.forEach(i => i.classList.remove("active"));
+
+            // activate current item
+            item.classList.add("active");
+
+            // load corresponding content
+            const key = item.dataset.key;
+            contentArea.innerHTML = details[key];
+        });
+    });
+
+    /* ---------- DEFAULT LOAD ---------- */
+    contentArea.innerHTML = details.company;
+</script>
+
+<footer>
+    <ul class="company">
+        <li><h3>Company</h3></li>
+        <li>About Us</li>
+        <li>FAQ</li>
+        <li>Contact</li>
+    </ul>
+
+    <ul class="legal">
+        <li><h3>Legal</h3></li>
+        <li>Privacy Policy</li>
+        <li>Terms & Conditions</li>
+        <li>Cookie Policy</li>
+    </ul>
+
+    <ul class="help">
+        <li><h3>Help</h3></li>
+        <li>Shipping & Delivery</li>
+        <li>Returns Policy</li>
+        <li>Security & Payment</li>
+    </ul>
+
+    <ul class="social">
+        <li><h3>Social</h3></li>
+        <li>Instagram</li>
+        <li>Twitter</li>
+    </ul>
+</footer>
+</body>
+</html>
